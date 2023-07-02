@@ -23,6 +23,19 @@ body {
     align-items: center;
 }
 
+#quiz-container,
+#start-page,
+#score-container,
+#highscore-page {
+    width: 80vw;
+    max-width: 600px;
+    background: #23272a;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
 #progress-bar {
     height: 20px;
     background: #99aab5;
@@ -57,7 +70,7 @@ body {
     text-align: center;
 }
 
-.option-btn, #start-btn, #highscore-btn, #next-btn, #restart-btn {
+.option-btn, #start-btn, #highscore-btn, #next-btn, #restart-btn, #go-back {
     display: block;
     width: 100%;
     padding: 10px;
@@ -69,7 +82,7 @@ body {
     cursor: pointer;
 }
 
-.option-btn:hover, #start-btn:hover, #highscore-btn:hover, #next-btn:hover, #restart-btn:hover {
+.option-btn:hover, #start-btn:hover, #highscore-btn:hover, #next-btn:hover, #restart-btn:hover, #go-back:hover {
     background: #7289da;
 }
 

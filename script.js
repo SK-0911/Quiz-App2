@@ -9,7 +9,15 @@ let selectedAnswer = "";
 async function loadQuizData() {
     const response = await fetch("questions.json");
     quizData = await response.json();
-    // console.log(quizData);
+
+    // randomize the questions
+    quizData.sort(() => Math.random() - 0.5);
+    /*
+    compare function will return a random number between -0.5 and 0.5, which will be looped through all the elements
+    if the number is negative, the first element will be placed before the second element
+    if the number is positive, the second element will be placed before the first element
+    if the number is 0, the order of the elements will remain unchanged
+    */
     loadQuestion();
 }
 
@@ -86,7 +94,7 @@ for(let i = 0; i < 4; i++) {
 
 // Event listener for the next button
 document.getElementById("next-btn").addEventListener("click", (event) => {
-    if(qNo < quizData.length-14){
+    if(qNo < quizData.length){
         qNo++;
         loadQuestion();
         const progress = Math.round((qNo) / quizData.length * 100);
@@ -104,6 +112,20 @@ function endQuiz() {
     document.getElementById("quiz-container").style.display = "none";
     document.getElementById("score-container").style.display = "block";
     document.getElementById("final-score").innerText = score;
+
+    // store the high score in the local storage
+    const scores = JSON.parse(localStorage.getItem("scores")) || [];    // scores will store the array of objects
+
+    // add the current score to the array
+    scores.push({
+        name: username,
+        score: score,
+        date: new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear(),
+        time: new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds(),    // add timezone as well
+    });
+
+    // store the scores in the local storage
+    localStorage.setItem("scores", JSON.stringify(scores));   // JSON.stringify() converts the array into a string
 }
 
 // Event listener for the restart button
@@ -115,19 +137,30 @@ document.getElementById("restart-btn").addEventListener("click", (event) => {
     selectedAnswer = "";
     document.getElementById("score").innerText = score;
     document.getElementById("username").innerText = " - ";
-    // document.getElementById("progress-bar-fill").style.width = "0%";
-    // document.getElementById("progress-bar-fill").style.width = progress + "%";
+    document.getElementById("progress-bar-fill").style.width = "0";
+    document.getElementById("progress-bar-text").innerText = "0%";
     document.getElementById("start-page").style.display = "block";
     document.getElementById("score-container").style.display = "none";
 });
 
 
-// let highScoreBtn = document.getElementById("highscore-btn");
-//
-// highScoreBtn.addEventListener("click",  (event) => {
-//     // Show the score div
-//     document.getElementById("highscore-page").style.display = "block";
-//     document.getElementById("start-page").style.display = "none";
-// });
-//
+document.getElementById("highscore-btn").addEventListener("click", (event) => {
+    // show the high scores
+    document.getElementById("highscore-page").style.display = "block";
+    document.getElementById("start-page").style.display = "none";
+    const scores = JSON.parse(localStorage.getItem("scores")) || [];
+    scores.sort((a, b) => b.score - a.score);
+    let scoresHTML = "";
+    for (let i = 0; i < scores.length; i++) {
+        scoresHTML += `<li style="list-style: none">${scores[i].name} - ${scores[i].score} - ${scores[i].date} at ${scores[i].time}</li>`;
+    }
+    document.getElementById("highscores").innerHTML = scoresHTML;
+});
+
+// go back btn
+document.getElementById("go-back").addEventListener("click", (event) => {
+    // go back to the start page
+    document.getElementById("highscore-page").style.display = "none";
+    document.getElementById("start-page").style.display = "block";
+});
 
